@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">door2door</string>
     <string name="title_activity_maps">Map</string>
+    <string name="text_pickup">[Pickup Location]: %1$s</string>
+    <string name="text_dropoff">[Dropoff Location]: %1$s</string>
+    <string name="text_status">Status</string>
+    <string name="status_waiting">Waiting</string>
 </resources>
