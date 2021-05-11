@@ -14,6 +14,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+/**
+ * ViewModel class is responsible for collecting data from service layer and provide it to view layer. It also
+ * works as bridge between view and data.
+ * HiltViewModel will be consumed by activity or fragment which is created by viewmodel factory
+ * View model is created by constructor injection which inject dependencies, generally repository
+ *
+ * @param mapsRepository passed as a primary constructor used for consuming data and posting it to observable
+ */
+
 @HiltViewModel
 class MapsViewModel @Inject constructor(private val mapsRepository: MapsRepository) : ViewModel() {
 
@@ -21,7 +30,6 @@ class MapsViewModel @Inject constructor(private val mapsRepository: MapsReposito
 
     val payload: LiveData<Payload>
         get() = _payload
-
 
     init {
         subscribeToSocketEvents()

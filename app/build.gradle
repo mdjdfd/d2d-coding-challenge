@@ -78,7 +78,6 @@ ext {
     coroutines_version = '1.3.1'
     gson_version = '2.8.6'
     maps_version = '17.0.0'
-    maps_util_version = '2.2.3'
 
     // Library Version (Testing)
     junit_version = '4.+'
@@ -124,9 +123,7 @@ dependencies {
     implementation      "com.google.code.gson:gson:$gson_version"
 
     //Google maps dependencies
-
     implementation      "com.google.android.gms:play-services-maps:$maps_version"
-    implementation      "com.google.maps.android:android-maps-utils:$maps_util_version"
 
 
 
