@@ -3,9 +3,9 @@ package com.d2d.challenge.core.di.module
 import com.d2d.challenge.BuildConfig
 import com.d2d.challenge.data.entity.Payload
 import com.d2d.challenge.data.entity.PayloadDeserializer
-import com.d2d.challenge.data.socket.ISocketController
-import com.d2d.challenge.data.socket.SocketCallback
-import com.d2d.challenge.data.socket.SocketControllerImpl
+import com.d2d.challenge.data.interactor.IServiceHelper
+import com.d2d.challenge.data.interactor.ServiceHelperImpl
+import com.d2d.challenge.data.socket.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -14,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.WebSocket
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
@@ -63,8 +64,26 @@ object ServiceModule {
 
     @Provides
     @Singleton
-    fun provideData(socketControllerImpl: SocketControllerImpl): ISocketController = socketControllerImpl
+    fun provideWebSocket(
+        okHttpClient: OkHttpClient,
+        request: Request,
+        socketCallback: SocketCallback
+    ): WebSocket = okHttpClient.newWebSocket(request, socketCallback)
 
+
+    @Provides
+    @Singleton
+    fun provideSocketService(
+        okHttpClient: OkHttpClient,
+        socketCallback: SocketCallback,
+        webSocket: WebSocket
+    ): ISocketController = SocketControllerImpl(okHttpClient, socketCallback, webSocket)
+
+
+
+    @Provides
+    @Singleton
+    fun provideSocket(serviceHelperImpl: ServiceHelperImpl): IServiceHelper = serviceHelperImpl
 
 
 }

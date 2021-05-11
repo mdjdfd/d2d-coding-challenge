@@ -7,6 +7,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -39,6 +40,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var initialMarker: Marker? = null
     var isMarkerRotating = false
 
+    private lateinit var firstLatLng: LatLng
+    private lateinit var secondLatLng: LatLng
+    var flag = false
+
     private val mapsViewModel: MapsViewModel by viewModels()
 
     private lateinit var binding: ActivityMapsBinding
@@ -63,6 +68,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun setupObserver() {
         mapsViewModel.payload.observe(this, {
+
             it?.let {
                 updateUi(it)
                 updateMaps(it)
@@ -91,9 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    lateinit var firstLatLng: LatLng
-    lateinit var secondLatLng: LatLng
-    var flag = false
+
     private fun updateMaps(payload: Payload) {
 
         when (payload.event) {
@@ -221,7 +225,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    fun navigationBearing(sourceLatLng: LatLng, destinationLatLng: LatLng): Float {
+    private fun navigationBearing(sourceLatLng: LatLng, destinationLatLng: LatLng): Float {
         return SphericalUtil.computeHeading(sourceLatLng, destinationLatLng).toFloat()
     }
 

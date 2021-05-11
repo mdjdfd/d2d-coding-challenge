@@ -30,7 +30,7 @@ class MapsViewModel @Inject constructor(private val mapsRepository: MapsReposito
      private fun subscribeToSocketEvents() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                mapsRepository.startSocket().consumeEach {
+                mapsRepository.getSocket().consumeEach {
                     if (it.exception == null) {
                         _payload.postValue(it.payload)
                     } else {
@@ -47,12 +47,11 @@ class MapsViewModel @Inject constructor(private val mapsRepository: MapsReposito
 
     private fun onSocketError(ex: Throwable) {
         Log.i(MapsViewModel::class.java.simpleName, "_log onSocketError :  ${ex.message}")
-        mapsRepository.stopSocket()
     }
 
     override fun onCleared() {
         super.onCleared()
-        mapsRepository.stopSocket()
+        mapsRepository.disconnectSocket()
     }
 
 
