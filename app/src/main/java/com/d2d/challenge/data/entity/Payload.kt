@@ -2,13 +2,18 @@ package com.d2d.challenge.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-
+/**
+ * Getter and setter for data serialization and deserialization
+ */
 data class Payload(
 
+    //Eligible for custom deserialization as a json string
     var statusRide: String? = null,
 
+    //Eligible for custom deserialization as a json object
     var statusCarLocation: Data? = null,
 
+    //Eligible for custom deserialization as a json array
     var statusStopLocations: List<IntermediateStopLocationsItem?>? = null,
 
     @SerializedName("event")

@@ -8,8 +8,19 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
+
+/**
+ * Singleton Matchers object to perform automated tests within a view.
+ */
 object Matchers {
-     fun setTextInTextView(value: String): ViewAction {
+
+    /**
+     * This implements ViewAction interface which is responsible for perform action within a given view. View perform
+     * action based on given parameter.
+     * @param value string value which is eligible for view action
+     * @return returns an instance of ViewAction object
+     */
+    fun setTextInTextView(value: String): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
                 return CoreMatchers.allOf(ViewMatchers.isDisplayed(), ViewMatchers.isAssignableFrom(
@@ -21,7 +32,7 @@ object Matchers {
             }
 
             override fun getDescription(): String {
-                return "replace text"
+                return ""
             }
         }
     }

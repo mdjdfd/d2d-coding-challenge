@@ -1,7 +1,6 @@
 package com.d2d.challenge.view
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.d2d.challenge.CoroutineTestRule
 import com.d2d.challenge.data.entity.Payload
 import com.d2d.challenge.data.interactor.IServiceHelper
@@ -37,8 +36,6 @@ class MapsViewModelTest {
 
     private var payload: Payload? = null
 
-    private lateinit var viewModel: MapsViewModel
-
     @Before
     fun setUp() {
         payload = Payload("Ride", null, null, "Event")
@@ -53,7 +50,7 @@ class MapsViewModelTest {
             doReturn(payload)
                 .`when`(iServiceHelper).getSocket()
 
-            viewModel = MapsViewModel(mapsRepository)
+            var viewModel = MapsViewModel(mapsRepository)
 
             verify(iServiceHelper).getSocket()
 

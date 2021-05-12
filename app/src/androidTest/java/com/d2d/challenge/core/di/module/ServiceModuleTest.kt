@@ -20,7 +20,6 @@ import dagger.hilt.android.testing.UninstallModules
 import dagger.hilt.components.SingletonComponent
 import junit.framework.TestCase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -32,14 +31,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
+/**
+ * Test all dependencies provided by service module.
+ * Need to uninstall actual service module as mock dependencies will be used for testing purpose.
+ * HiltAndroidTest annotation used for specifying test requires dependency to be injected.
+ * ExperimentalCoroutinesApi annotation requires to test suspend function launched in coroutine
+ */
 @UninstallModules(ServiceModule::class)
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
 class ServiceModuleTest {
 
+    //HiltAndroidRule must executed first order
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
+    //CoroutineTestRule can be executed later
     @get:Rule(order = 1)
     val coroutineTestRule = CoroutineTestRule()
 
@@ -150,6 +157,9 @@ class ServiceModuleTest {
 }
 
 
+/**
+ * Provide all mock dependencies in order to test
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object TestServiceModule {

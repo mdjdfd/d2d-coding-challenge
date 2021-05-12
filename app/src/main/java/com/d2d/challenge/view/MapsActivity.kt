@@ -1,13 +1,15 @@
 package com.d2d.challenge.view
 
 import android.location.Location
-import android.os.*
+import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.d2d.challenge.BR
 import com.d2d.challenge.R
 import com.d2d.challenge.common.Event
+import com.d2d.challenge.common.ifLatLngNotNull
 import com.d2d.challenge.data.entity.IntermediateStopLocationsItem
 import com.d2d.challenge.data.entity.Payload
 import com.d2d.challenge.databinding.ActivityMapsBinding
@@ -47,9 +49,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_maps)
         binding.executePendingBindings()
 
+
         setupObserver()
 
-        var mapFragment = supportFragmentManager
+        val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -61,7 +64,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     private fun setupObserver() {
         mapsViewModel.payload.observe(this, {
-
             it?.let {
                 updateUi(it)
                 updateMaps(it)
@@ -75,16 +77,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     private fun updateUi(payload: Payload) {
 
-        if (payload.event.equals(Event.BookingOpened.eventName, true)) {
-            textview_source.text = String.format(
-                resources.getString(R.string.text_pickup),
-                payload.statusCarLocation?.pickupLocation?.address
-            )
-            textview_destination.text = String.format(
-                resources.getString(R.string.text_dropoff),
-                payload.statusCarLocation?.dropoffLocation?.address
-            )
-            binding.setVariable(BR.payload, payload)
+        when (payload.event) {
+            Event.BookingOpened.eventName -> {
+                textview_source.text = String.format(
+                    resources.getString(R.string.text_pickup),
+                    payload.statusCarLocation?.pickupLocation?.address
+                )
+                textview_destination.text = String.format(
+                    resources.getString(R.string.text_dropoff),
+                    payload.statusCarLocation?.dropoffLocation?.address
+                )
+                binding.setVariable(BR.payload, payload)
+            }
+
+            Event.BookingClosed.eventName -> {
+                textview_ride_status.visibility = View.GONE
+            }
         }
 
         payload.statusRide?.let {
@@ -228,30 +236,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * @return return computed bearing in Float
      */
     private fun navigationBearing(previous: LatLng, current: LatLng): Float {
-        var previousLocation = Location("")
+        val previousLocation = Location("")
         previousLocation.latitude = previous.latitude
         previousLocation.longitude = previous.longitude
 
-        var currentLocation = Location("")
+        val currentLocation = Location("")
         currentLocation.latitude = current.latitude
         currentLocation.longitude = current.longitude
 
         return previousLocation.bearingTo(currentLocation)
     }
 
-
-}
-
-
-/**
- * An inline higher order function to check pair of nullable values.
- * @param a first nullable parameter
- * @param b second nullable parameter
- * @param action is a lambda expression take function as a parameter
- */
-
-inline fun <A, B, R> ifLatLngNotNull(a: A?, b: B?, action: (A, B) -> R) {
-    if (a != null && b != null) {
-        action(a, b)
-    }
 }
